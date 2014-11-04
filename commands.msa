@@ -71,6 +71,24 @@
 		)
 	),
 	array(
+		name: 'give-held',
+		params: '<qty> [<slot>]',
+		docs: 'Gives the player a duplicate of your currently held item',
+		code: closure(@args,
+			if(array_size(@args) != 1 && array_size(@args) != 2){
+				die(color(RED).'Usage: /easy-sign give-held qty [slot]')
+			}
+			if(!is_integral(@args[0])){
+				die(color(RED).'Qty must be an integer')
+			}
+			@slot = null
+			if(array_size(@args) == 2){
+				@slot = @args[1]
+			}
+			execute(array(item: pinv(player(), null), qty: @args[0], slot: @slot), @standardSignUsage)
+		)
+	),
+	array(
 		name: 'hunger',
 		params: '',
 		docs: 'Refills a player\'s hunger bar',
