@@ -39,6 +39,26 @@ bind(player_interact, null, null, @e,
 						} else {
 							pgive_item(@item, @qty)
 						}
+					,'give-held',
+						@item = @data['item']
+						@qty = @data['qty']
+						@slot = @data['slot']
+						if(@slot != null){
+							@array = associative_array()
+							@array[@slot] = @item
+							set_pinv(@array)
+						} else {
+							#find empty slot
+							foreach(0..31, @i,
+								if(pinv(player(), @i) == null){
+									# found it
+									@array = associative_array()
+									@array[@i] = @item
+									set_pinv(player(), @array)
+									break()
+								}
+							)
+						}
 					,'hunger',
 						set_phunger(20)
 						set_psaturation(20),
