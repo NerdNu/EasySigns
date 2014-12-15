@@ -232,7 +232,15 @@
 			}
 			execute(array(location: @location), @standardSignUsage)
 		)
-	)	
+	),
+	array(
+		name: 'direction',
+		params: '<F>',
+		docs: 'Sets the player\'s direction. Allowed arguments are 0,1,2,3, which correspond to West, South, East, North.',
+		code: closure(@args,
+			execute(array_implode(@args), @standardSignUsage)
+		)
+	)
 	)
 	if($type == ''){
 		msg(color(RED).'Usage: /easy-sign <type> [<args>]')
