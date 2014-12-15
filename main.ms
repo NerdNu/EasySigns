@@ -132,6 +132,8 @@ bind(player_interact, null, null, @e,
 						)
 					,'cart',
 						spawn_entity(MINECART, 1, @data['location'])
+					,'direction',
+						pfacing(player(), @data)
 				)
 			)
 		}
