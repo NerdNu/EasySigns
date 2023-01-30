@@ -131,7 +131,7 @@ actions.
 | lore | `<item> <qty> <lore>\|\|<itemmsg>\|\|<qtymsg>` | Takes a specified quantity of an item from a player if it has the required lore. Unlike the take action, the player must be holding the item in their main hand when they click the sign. Colors in the lore are ignored and multiple lines are concatenated without spaces. The item must be in the player's hand. If the wrong item is held, `<itemmsg>` is shown. If it is the right item but insufficient in quantity, `<qtymsg>` is shown. The `<lore>`, `<itemmsg>` and `<qtymsg>` can all be multiple words. Formatting codes and variable substitution are allowed. The double-bar sequence, `\|\|`, is used to separate those arguments. If the item is not taken for whatever reason, subsequent sign actions are not processed. Caution: multiple consecutive spaces in any of these strings will be replaced with single spaces. |
 | max | `<uses>` | Allows the sign to be used `<uses>` times and no more. No other commands will be run once the limit is reached. |
 | msg | `<message>` | Sends the player a message. Formatting codes and variable substitution are supported. |
-| opcmd | `<command>` | Runs a command as OP. Omit the leading slash. Formatting codes and variable substitution are supported. |
+| opcmd | `<command>` | Runs a command as OP, as the console user. Omit the leading slash. Formatting codes and variable substitution are supported. *Note that this action does NOT confer operator permissions to a player. It runs a command in the console, and so you will usually want to format the name of the affected player, `%p%`, and possibly their coordinates, into the command.* |
 | potion | `<effect> <strength> <seconds>` | Applies a [potion effect](https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionEffectType.html) to the player. `<strength>` must be at least 1 and `<duration>` is in seconds. |
 | randloc | `[<min-distance>] <max-distance>` | Teleports the player to a randomly selected surface location between `<min-distance>` and `<max-distance>` blocks from 0,0. If `<min-distance>` is omittted, it is assumed to be 0. The plugin makes 10 attempts to find a safe location to put the player, and then gives up with an error message, aborting subsequent sign actions. |
 | redstone | | Causes the sign to emit a redstone signal. |
@@ -174,7 +174,7 @@ actions.
 
 Dependencies
 ------------
-This plugin depends on BlockStore.
+This plugin depends on [BlockStore](https://github.com/totemo/BlockStore/releases).
 
 
 Permissions
