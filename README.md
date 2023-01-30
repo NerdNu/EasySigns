@@ -133,7 +133,7 @@ actions.
 | msg | `<message>` | Sends the player a message. Formatting codes and variable substitution are supported. |
 | opcmd | `<command>` | Runs a command as OP. Omit the leading slash. Formatting codes and variable substitution are supported. |
 | potion | `<effect> <strength> <seconds>` | Applies a [potion effect](https://hub.spigotmc.org/javadocs/spigot/org/bukkit/potion/PotionEffectType.html) to the player. `<strength>` must be at least 1 and `<duration>` is in seconds. |
-| randloc | `<max_distance>` | Teleports the player to a randomly selected surface location within `<max_distance>` blocks of 0,0. |
+| randloc | `[<min-distance>] <max-distance>` | Teleports the player to a randomly selected surface location between `<min-distance>` and `<max-distance>` blocks from 0,0. If `<min-distance>` is omittted, it is assumed to be 0. The plugin makes 10 attempts to find a safe location to put the player, and then gives up with an error message, aborting subsequent sign actions. |
 | redstone | | Causes the sign to emit a redstone signal. |
 | setbed | `[<world>] <x> <y> <z>` | Sets the player's bed respawn location to the specified position. |
 | sleep | | Sets the player's bed respawn location to their position when they clicked the sign. |

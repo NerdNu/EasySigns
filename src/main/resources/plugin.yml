@@ -3,7 +3,7 @@ main: nu.nerd.easysigns.EasySigns
 description: Create signs with custom actions.
 author: ["redwall_hp", "bermudalocket", "Nerd.nu"]
 depend: [BlockStore]
-api-version: 1.13
+api-version: 1.16
 version: ${project.version}
 
 
