@@ -86,12 +86,13 @@ public class SoundAction extends SignAction {
     }
 
     @Override
-    public void action(Player player) {
+    public boolean action(Player player) {
         if (ambient) {
             sign.getBlock().getLocation().getWorld().playSound(sign.getBlock().getLocation(), sound, volume, pitch);
         } else {
             player.playSound(player.getLocation(), sound, volume, pitch);
         }
+        return true;
     }
 
 }

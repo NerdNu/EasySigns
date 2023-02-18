@@ -5,7 +5,6 @@ import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -351,11 +350,12 @@ public class CommandHandler implements TabExecutor {
     }
 
     /**
-     * Handle /easy-sign-used <player> <count>.
+     * Handle /easy-sign-used <player> [<count>].
      */
     private void usedSign(CommandSender sender, String[] args) {
-        if (args.length != 2) {
-            sender.sendMessage(ChatColor.RED + "Invalid arguments. Usage: /easy-sign-used <player> <count>");
+        if (args.length < 1 || args.length > 2) {
+            sender.sendMessage(ChatColor.RED + "Invalid arguments. Usage: /easy-sign-used <player> [<count>]");
+            sender.sendMessage(ChatColor.RED + "Get or set the number of times the specified player has used this sign.");
             return;
         }
 
@@ -376,34 +376,52 @@ public class CommandHandler implements TabExecutor {
             return;
         }
 
+        // count == -1 means "read the number of times used".
         int count = -1;
-        try {
-            count = Integer.parseInt(args[1]);
-        } catch (IllegalArgumentException ex) {
-        }
-        if (count < 0) {
-            sender.sendMessage(ChatColor.RED + "The count must be zero or greater.");
-            return;
-        }
 
-        SignData sign = SignData.load(looking);
-        boolean changed = false;
-        for (SignAction action : sign.getActions()) {
-            if (action.getName().equals("announce")) {
-                boolean signUsed = (count != 0);
-                ((AnnounceAction) action).setUsed(player.getUniqueId(), signUsed);
-                sender.sendMessage(ChatColor.GOLD + "The announce action now records " + player.getName() +
-                                   " as having " + (signUsed ? "used" : "never used") + " the sign.");
-                changed = true;
-            } else if (action.getName().equals("max")) {
-                ((MaxAction) action).setTimesUsed(player.getUniqueId(), count);
-                sender.sendMessage(ChatColor.GOLD + "The use count for " + player.getName() + " was set to " + count + ".");
-                changed = true;
+        // 2 args means setting the count, otherwise it is reading the count.
+        if (args.length == 2) {
+            try {
+                count = Integer.parseInt(args[1]);
+            } catch (IllegalArgumentException ex) {
+            }
+            if (count < 0) {
+                sender.sendMessage(ChatColor.RED + "The count must be zero or greater.");
+                return;
             }
         }
 
-        if (!changed) {
-            sender.sendMessage(ChatColor.GOLD + "No sign actions were affected.");
+        SignData sign = SignData.load(looking);
+        boolean relevant = false;
+        for (SignAction action : sign.getActions()) {
+            if (action.getName().equals("announce")) {
+                relevant = true;
+                AnnounceAction announce = (AnnounceAction) action;
+                if (count < 0) {
+                    boolean used = announce.hasUsed(player.getUniqueId());
+                    sender.sendMessage(ChatColor.GOLD + "The announce action has " +
+                                       (used ? "been used" : "not been used") + " by " + player.getName() + ".");
+                } else {
+                    boolean used = (count != 0);
+                    announce.setUsed(player.getUniqueId(), used);
+                    sender.sendMessage(ChatColor.GOLD + "The announce action now records " + player.getName() +
+                                       " as having " + (used ? "used" : "never used") + " the sign.");
+                }
+            } else if (action.getName().equals("max")) {
+                relevant = true;
+                MaxAction max = (MaxAction) action;
+                if (count < 0) {
+                    count = max.getTimesUsed(player.getUniqueId());
+                    sender.sendMessage(ChatColor.GOLD + "The sign has been used by " + player.getName() + " " + count + " times.");
+                } else {
+                    max.setTimesUsed(player.getUniqueId(), count);
+                    sender.sendMessage(ChatColor.GOLD + "The use count for " + player.getName() + " was set to " + count + ".");
+                }
+            }
+        }
+
+        if (!relevant) {
+            sender.sendMessage(ChatColor.GOLD + "The sign has no actions that keep count.");
         }
     }
 
@@ -416,11 +434,10 @@ public class CommandHandler implements TabExecutor {
         sign.setEditingPlayer(player);
 
         String actionFmt = ChatColor.BLUE + "%s %s" + ChatColor.WHITE + " - %s";
-        String cmdFmt = ChatColor.YELLOW + "%s " + ChatColor.GRAY + "- %s";
 
         // List available actions and their usage
         sender.sendMessage(ChatColor.RED + "Usage: /easy-sign <action> [<args>]");
-        for (String actionName : plugin.getValidActions().stream().sorted().collect(Collectors.toList())) {
+        for (String actionName : plugin.getValidActions()) {
             try {
                 Class<?> c = plugin.getActionClassByName(actionName);
                 SignAction action = (SignAction) c.getConstructor(SignData.class, String[].class).newInstance(sign, new String[0]);

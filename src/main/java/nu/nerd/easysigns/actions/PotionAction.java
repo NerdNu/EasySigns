@@ -1,25 +1,21 @@
 package nu.nerd.easysigns.actions;
 
+import java.util.HashMap;
+import java.util.Map;
 
-import nu.nerd.easysigns.SignData;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import java.util.HashMap;
-import java.util.Map;
+import nu.nerd.easysigns.SignData;
 
 public class PotionAction extends SignAction {
 
-
-    private SignData sign;
     private PotionEffect effect;
     boolean valid = true;
 
-
     public PotionAction(SignData sign, String[] args) {
-        this.sign = sign;
         try {
             String name = args[0];
             int amplifier = Integer.parseInt(args[1]) - 1;
@@ -33,59 +29,56 @@ public class PotionAction extends SignAction {
             } else {
                 valid = false;
             }
-        } catch (IndexOutOfBoundsException|IllegalArgumentException ex) {
+        } catch (IndexOutOfBoundsException | IllegalArgumentException ex) {
             valid = false;
         }
     }
 
-
     public PotionAction(SignData sign, ConfigurationSection attributes) {
-        this.sign = sign;
         this.effect = (PotionEffect) attributes.get("effect");
     }
 
-
+    @Override
     public String getName() {
         return "potion";
     }
 
-
+    @Override
     public String getUsage() {
         return "<effect> <strength> <seconds>";
     }
 
-
+    @Override
     public String getHelpText() {
         return "Applies a potion effect to the player. <strength> must be at least 1 and " +
-                "<duration> is in seconds.";
+               "<duration> is in seconds.";
     }
 
-
+    @Override
     public String toString() {
         return String.format("%s %s %d %d",
-                getName(),
-                effect.getType().getName(),
-                effect.getAmplifier() + 1,
-                effect.getDuration() / 20
-        );
+                             getName(),
+                             effect.getType().getName(),
+                             effect.getAmplifier() + 1,
+                             effect.getDuration() / 20);
     }
 
-
+    @Override
     public boolean isValid() {
         return valid;
     }
 
-
+    @Override
     public Map<String, Object> serialize() {
         Map<String, Object> map = new HashMap<>();
         map.put("effect", effect);
         return map;
     }
 
-
-    public void action(Player player) {
-        player.addPotionEffect(effect, true);
+    @Override
+    public boolean action(Player player) {
+        player.addPotionEffect(effect);
+        return true;
     }
-
 
 }

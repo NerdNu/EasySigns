@@ -1,6 +1,12 @@
 package nu.nerd.easysigns.actions;
 
-import nu.nerd.easysigns.SignData;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -10,26 +16,16 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
-
+import nu.nerd.easysigns.SignData;
 
 public class DropInventoryAction extends SignAction {
 
-
-    private SignData sign;
     private List<ItemStack> items;
     private Location loc;
     private boolean scatter = false;
     private boolean valid = true;
 
-
     public DropInventoryAction(SignData sign, String[] args) {
-        this.sign = sign;
         this.items = new ArrayList<>();
         Collections.addAll(items, sign.getEditingPlayer().getInventory().getContents());
         try {
@@ -52,14 +48,12 @@ public class DropInventoryAction extends SignAction {
                 }
             }
             loc = new Location(world, x, y, z);
-        } catch (IndexOutOfBoundsException|IllegalArgumentException ex) {
+        } catch (IndexOutOfBoundsException | IllegalArgumentException ex) {
             valid = false;
         }
     }
 
-
     public DropInventoryAction(SignData sign, ConfigurationSection attributes) {
-        this.sign = sign;
         this.loc = (Location) attributes.get("loc");
         this.scatter = attributes.getBoolean("scatter");
         this.items = new ArrayList<>();
@@ -67,40 +61,39 @@ public class DropInventoryAction extends SignAction {
         items.addAll(list.stream().map(i -> (ItemStack) i).collect(Collectors.toList()));
     }
 
-
+    @Override
     public String getName() {
         return "dropinventory";
     }
 
-
+    @Override
     public String getUsage() {
         return "[<world>] <x> <y> <z> [<scatter>]";
     }
 
-
+    @Override
     public String getHelpText() {
         return "Drops a copy of your current inventory at the specified coordinates. Specify true/false " +
-                "as the [<scatter>] argument to give the dropped items random velocities";
+               "as the [<scatter>] argument to give the dropped items random velocities";
     }
 
-
+    @Override
     public String toString() {
         return String.format("%s %s %d %d %d %s",
-                getName(),
-                loc.getWorld().getName(),
-                loc.getBlockX(),
-                loc.getBlockY(),
-                loc.getBlockZ(),
-                scatter
-        );
+                             getName(),
+                             loc.getWorld().getName(),
+                             loc.getBlockX(),
+                             loc.getBlockY(),
+                             loc.getBlockZ(),
+                             scatter);
     }
 
-
+    @Override
     public boolean isValid() {
         return valid;
     }
 
-
+    @Override
     public Map<String, Object> serialize() {
         Map<String, Object> map = new HashMap<>();
         map.put("loc", loc);
@@ -109,10 +102,12 @@ public class DropInventoryAction extends SignAction {
         return map;
     }
 
-
-    public void action(Player player) {
+    @Override
+    public boolean action(Player player) {
         for (ItemStack item : items) {
-            if (item == null) continue;
+            if (item == null) {
+                continue;
+            }
             if (!scatter) {
                 Item ent = loc.getWorld().dropItem(loc, item);
                 ent.setVelocity(new Vector(0, 0, 0));
@@ -120,7 +115,7 @@ public class DropInventoryAction extends SignAction {
                 loc.getWorld().dropItemNaturally(loc, item);
             }
         }
+        return true;
     }
-
 
 }

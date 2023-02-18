@@ -8,9 +8,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
 
-import nu.nerd.easysigns.EasySigns;
 import nu.nerd.easysigns.SignData;
 
 public class TakeHeldAction extends SignAction {
@@ -87,27 +85,19 @@ public class TakeHeldAction extends SignAction {
     }
 
     @Override
-    public boolean shouldExit(Player player) {
-        if (player.hasMetadata("easysigns.takeheld")) {
-            player.removeMetadata("easysigns.takeheld", EasySigns.instance);
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public void action(Player player) {
+    public boolean action(Player player) {
         ItemStack held = player.getInventory().getItemInMainHand();
         if (held != null && held.isSimilar(item)) {
             if (held.getAmount() >= item.getAmount()) {
                 held.setAmount(held.getAmount() - item.getAmount());
-                player.setMetadata("easysigns.takeheld", new FixedMetadataValue(EasySigns.instance, true));
+                return true;
             } else {
                 player.sendMessage(substitute(qtyMessage, player, sign.getBlock()));
             }
         } else {
             player.sendMessage(substitute(itemMessage, player, sign.getBlock()));
         }
+        return false;
     }
 
 }

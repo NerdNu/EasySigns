@@ -79,26 +79,22 @@ public class MaxAction extends SignAction {
     }
 
     @Override
-    public boolean shouldExit(Player player) {
-        return getTimesUsed(player.getUniqueId()) > uses;
-    }
-
-    @Override
-    public void action(Player player) {
+    public boolean action(Player player) {
         UUID playerUUID = player.getUniqueId();
         int times = getTimesUsed(playerUUID);
-        if (times <= uses) {
+        if (times < uses) {
             setTimesUsed(playerUUID, ++times);
-        }
-        if (times > uses) {
+            return true;
+        } else {
             player.sendMessage(String.format("%sMaximum uses reached! (%d)", ChatColor.GREEN, uses));
+            return false;
         }
     }
 
     /**
      * Load the YAML-encoded map from player UUID (String) to use count, which
      * is stored in the block meta.
-     * 
+     *
      * @return the YAML map of use counts by player UUID string.
      */
     private FileConfiguration loadUseMap() {

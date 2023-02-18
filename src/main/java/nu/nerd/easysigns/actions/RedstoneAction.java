@@ -77,7 +77,7 @@ public class RedstoneAction extends SignAction {
     }
 
     @Override
-    public void action(Player player) {
+    public boolean action(Player player) {
         Block start = sign.getBlock();
         if (EasySigns.instance.isWallSign(start)) {
             // If this is a wall sign, power from the single block behind the
@@ -107,6 +107,7 @@ public class RedstoneAction extends SignAction {
                 }
             }
         }
+        return true;
     }
 
 }

@@ -16,7 +16,6 @@ public class WarpAction extends SignAction {
 
     private static final DecimalFormat NUMBER_FORMAT = new DecimalFormat("0.#");
     private Location loc;
-    private final SignData sign;
     private boolean valid;
 
     /**
@@ -32,13 +31,11 @@ public class WarpAction extends SignAction {
 
     /**
      * Construct new action from command arguments
-     * 
+     *
      * @param sign the sign this action is being applied to.
      * @param args raw command arguments from the CommandExecutor.
      */
     public WarpAction(SignData sign, String[] args) {
-        this.sign = sign;
-
         try {
             // Check for a valid world first, then check the remaining args.
             int xIndex;
@@ -73,7 +70,6 @@ public class WarpAction extends SignAction {
     }
 
     public WarpAction(SignData sign, ConfigurationSection attributes) {
-        this.sign = sign;
         this.loc = (Location) attributes.get("loc");
         this.yaw = (Double) attributes.get("yaw");
         this.pitch = (Double) attributes.get("pitch");
@@ -98,7 +94,7 @@ public class WarpAction extends SignAction {
 
     /**
      * Return the string representation of the sign action for /easy-sign-info.
-     * 
+     *
      * @return String in the form "warp world 0 70 0" or "warp world 0 70 0 180
      *         -45".
      */
@@ -136,15 +132,16 @@ public class WarpAction extends SignAction {
      * When the player clicks the sign, teleport them to the stored location,
      * inserting the player's current yaw and pitch look angles if they are not
      * explicitly overridden by the sign.
-     * 
+     *
      * @param player the player clicking the sign
      */
     @Override
-    public void action(Player player) {
+    public boolean action(Player player) {
         Location playerLoc = player.getLocation();
         Location destination = loc.clone();
         destination.setYaw((float) (yaw != null ? yaw : playerLoc.getYaw()));
         destination.setPitch((float) (pitch != null ? pitch : playerLoc.getPitch()));
         player.teleport(destination);
+        return true;
     }
 }

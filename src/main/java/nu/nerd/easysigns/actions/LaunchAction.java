@@ -1,25 +1,20 @@
 package nu.nerd.easysigns.actions;
 
+import java.util.HashMap;
+import java.util.Map;
 
-import nu.nerd.easysigns.SignData;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
 
-import java.util.HashMap;
-import java.util.Map;
-
+import nu.nerd.easysigns.SignData;
 
 public class LaunchAction extends SignAction {
 
-
-    private SignData sign;
     private Vector vector;
     private boolean valid = true;
 
-
     public LaunchAction(SignData sign, String[] args) {
-        this.sign = sign;
         try {
             double x = Double.parseDouble(args[0]);
             double y = Double.parseDouble(args[1]);
@@ -29,54 +24,52 @@ public class LaunchAction extends SignAction {
             } else {
                 vector = new Vector(x, y, z);
             }
-        } catch (NumberFormatException|IndexOutOfBoundsException ex) {
+        } catch (NumberFormatException | IndexOutOfBoundsException ex) {
             valid = false;
         }
     }
 
-
     public LaunchAction(SignData sign, ConfigurationSection attributes) {
-        this.sign = sign;
         this.vector = attributes.getVector("vector");
     }
 
-
+    @Override
     public String getName() {
         return "launch";
     }
 
-
+    @Override
     public String getUsage() {
         return "<x> <y> <z>";
     }
 
-
+    @Override
     public String getHelpText() {
         return "Launches a player with the specified velocity vector. The magnitude of the vector cannot " +
-                "exceed 10. That is, sqrt(x^2 + y^2 + z^2) must be < 10.";
+               "exceed 10. That is, sqrt(x^2 + y^2 + z^2) must be < 10.";
     }
 
-
+    @Override
     public String toString() {
         return String.format("%s %.2f %.2f %.2f", getName(), vector.getX(), vector.getY(), vector.getZ());
     }
 
-
+    @Override
     public boolean isValid() {
         return valid;
     }
 
-
+    @Override
     public Map<String, Object> serialize() {
         Map<String, Object> map = new HashMap<>();
         map.put("vector", vector);
         return map;
     }
 
-
-    public void action(Player player) {
+    @Override
+    public boolean action(Player player) {
         player.setVelocity(vector);
+        return true;
     }
-
 
 }

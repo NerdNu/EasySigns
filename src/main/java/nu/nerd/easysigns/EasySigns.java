@@ -1,8 +1,8 @@
 package nu.nerd.easysigns;
 
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
@@ -18,6 +18,7 @@ import nu.nerd.easysigns.actions.CheckEmptyInvAction;
 import nu.nerd.easysigns.actions.ClearInvAction;
 import nu.nerd.easysigns.actions.ClearPotionsAction;
 import nu.nerd.easysigns.actions.CmdAction;
+import nu.nerd.easysigns.actions.CoolDownAction;
 import nu.nerd.easysigns.actions.DropInventoryAction;
 import nu.nerd.easysigns.actions.GiveAction;
 import nu.nerd.easysigns.actions.HealAction;
@@ -62,42 +63,44 @@ public class EasySigns extends JavaPlugin {
     }
 
     /**
-     * Register SignAction subclasses for use
+     * Register SignAction subclasses for use, in the order they should be
+     * listed in help.
      */
     private void createActionAtlas() {
-        actionAtlas = new HashMap<>();
-        actionAtlas.put("sleep", SleepAction.class);
-        actionAtlas.put("warp", WarpAction.class);
+        actionAtlas = new LinkedHashMap<>();
+        actionAtlas.put("announce", AnnounceAction.class);
+        actionAtlas.put("cart", CartAction.class);
         actionAtlas.put("check-empty-inventory", CheckEmptyInvAction.class);
         actionAtlas.put("ci", ClearInvAction.class);
+        actionAtlas.put("clearpotions", ClearPotionsAction.class);
         actionAtlas.put("cmd", CmdAction.class);
-        actionAtlas.put("opcmd", OpCmdAction.class);
+        actionAtlas.put("cooldown", CoolDownAction.class);
+        actionAtlas.put("dropinventory", DropInventoryAction.class);
         actionAtlas.put("give", GiveAction.class);
-        actionAtlas.put("hunger", HungerAction.class);
-        actionAtlas.put("announce", AnnounceAction.class);
         actionAtlas.put("heal", HealAction.class);
+        actionAtlas.put("hunger", HungerAction.class);
+        actionAtlas.put("inventory", InventoryAction.class);
+        actionAtlas.put("launch", LaunchAction.class);
+        actionAtlas.put("leather", LeatherAction.class);
+        actionAtlas.put("lore", LoreAction.class);
         actionAtlas.put("max", MaxAction.class);
         actionAtlas.put("msg", MsgAction.class);
+        actionAtlas.put("opcmd", OpCmdAction.class);
+        actionAtlas.put("potion", PotionAction.class);
+        actionAtlas.put("randloc", RandLocAction.class);
+        actionAtlas.put("redstone", RedstoneAction.class);
+        actionAtlas.put("setbed", SetBedAction.class);
+        actionAtlas.put("sleep", SleepAction.class);
+        actionAtlas.put("sound", SoundAction.class);
         actionAtlas.put("take", TakeAction.class);
         actionAtlas.put("takeheld", TakeHeldAction.class);
-        actionAtlas.put("lore", LoreAction.class);
-        actionAtlas.put("potion", PotionAction.class);
-        actionAtlas.put("clearpotions", ClearPotionsAction.class);
-        actionAtlas.put("leather", LeatherAction.class);
-        actionAtlas.put("inventory", InventoryAction.class);
-        actionAtlas.put("dropinventory", DropInventoryAction.class);
-        actionAtlas.put("cart", CartAction.class);
-        actionAtlas.put("launch", LaunchAction.class);
-        actionAtlas.put("randloc", RandLocAction.class);
         actionAtlas.put("tpbed", TeleportBedAction.class);
-        actionAtlas.put("setbed", SetBedAction.class);
-        actionAtlas.put("sound", SoundAction.class);
-        actionAtlas.put("redstone", RedstoneAction.class);
+        actionAtlas.put("warp", WarpAction.class);
     }
 
     /**
      * Look up the Class of an action by the action's name
-     * 
+     *
      * @param name name of the action to look up
      * @return the matching Class object or null
      */
@@ -121,7 +124,7 @@ public class EasySigns extends JavaPlugin {
 
     /**
      * Check if a block is a sign.
-     * 
+     *
      * @param block the block to check
      * @return true if the block's material is that of a sign of any type.
      */
@@ -131,7 +134,7 @@ public class EasySigns extends JavaPlugin {
 
     /**
      * Check if a block is a wall sign
-     * 
+     *
      * @param block the block to check
      * @return true if the block's material is that of a wall sign of any type.
      */
@@ -141,7 +144,7 @@ public class EasySigns extends JavaPlugin {
 
     /**
      * Consult BlockStore to see if this block is registered as an EasySign
-     * 
+     *
      * @param block the block to check
      * @return true if EasySign
      */

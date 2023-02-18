@@ -1,26 +1,23 @@
 package nu.nerd.easysigns.actions;
 
-import nu.nerd.easysigns.EasySigns;
-import nu.nerd.easysigns.SignData;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.HashMap;
-import java.util.Map;
+import nu.nerd.easysigns.EasySigns;
+import nu.nerd.easysigns.SignData;
 
 public class GiveAction extends SignAction {
 
-
-    private SignData sign;
     private ItemStack item;
     private int slot = -1;
     private boolean valid = true;
 
-
     public GiveAction(SignData sign, String[] args) {
-        this.sign = sign;
         try {
             String itemName = args[0];
             if (itemName.equalsIgnoreCase("held")) {
@@ -34,35 +31,33 @@ public class GiveAction extends SignAction {
                     slot = Integer.parseInt(args[2]);
                 }
             }
-        } catch (IndexOutOfBoundsException|IllegalArgumentException ex) {
+        } catch (IndexOutOfBoundsException | IllegalArgumentException ex) {
             valid = false;
         }
     }
 
-
     public GiveAction(SignData sign, ConfigurationSection attributes) {
-        this.sign = sign;
         this.item = (ItemStack) attributes.get("item");
         this.slot = attributes.getInt("slot");
     }
 
-
+    @Override
     public String getName() {
         return "give";
     }
 
-
+    @Override
     public String getUsage() {
         return "<item> <qty> [<slot>] or held [<slot>]";
     }
 
-
+    @Override
     public String getHelpText() {
         return "Gives the player an item. Place it in the specified slot number, or a free slot if not specified. " +
-                "If 'held' is used in place of an item name, the item in your main hand will be used.";
+               "If 'held' is used in place of an item name, the item in your main hand will be used.";
     }
 
-
+    @Override
     public String toString() {
         if (slot > -1) {
             return String.format("%s %s %d", getName(), item.toString(), slot);
@@ -71,12 +66,12 @@ public class GiveAction extends SignAction {
         }
     }
 
-
+    @Override
     public boolean isValid() {
         return valid;
     }
 
-
+    @Override
     public Map<String, Object> serialize() {
         Map<String, Object> map = new HashMap<>();
         map.put("item", item);
@@ -84,25 +79,24 @@ public class GiveAction extends SignAction {
         return map;
     }
 
-
-    public void action(Player player) {
+    @Override
+    public boolean action(Player player) {
         if (slot > -1) {
             if (player.getInventory().getItem(slot) == null) {
                 player.getInventory().setItem(slot, item);
             }
         } else {
-            Map<Integer,ItemStack> notGiven = player.getInventory().addItem(item);
+            Map<Integer, ItemStack> notGiven = player.getInventory().addItem(item);
             if (notGiven.size() > 0) {
-                EasySigns.instance.getLogger().info(String.format(
-                        "Easysign action 'give' failed for player %s. %d/%d item %s not given.",
-                        player.getName(),
-                        notGiven.size(),
-                        item.getAmount(),
-                        item.getType().toString()
-                ));
+                String message = String.format("Easysign action 'give' failed for player %s. %d/%d item %s not given.",
+                                               player.getName(),
+                                               notGiven.size(),
+                                               item.getAmount(),
+                                               item.getType().toString());
+                EasySigns.instance.getLogger().info(message);
             }
         }
+        return true;
     }
-
 
 }

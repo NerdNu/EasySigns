@@ -9,9 +9,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
 
-import nu.nerd.easysigns.EasySigns;
 import nu.nerd.easysigns.SignData;
 
 public class LoreAction extends SignAction {
@@ -95,16 +93,7 @@ public class LoreAction extends SignAction {
     }
 
     @Override
-    public boolean shouldExit(Player player) {
-        if (player.hasMetadata("easysigns.lore")) {
-            player.removeMetadata("easysigns.lore", EasySigns.instance);
-            return false;
-        }
-        return true;
-    }
-
-    @Override
-    public void action(Player player) {
+    public boolean action(Player player) {
         ItemStack held = player.getInventory().getItemInMainHand();
         boolean hasItem = held != null && held.getType().equals(item.getType());
         boolean hasLore = held != null && held.hasItemMeta() && held.getItemMeta().hasLore();
@@ -113,12 +102,13 @@ public class LoreAction extends SignAction {
         if (hasItem && heldItemLore.equals(substitute(lore, player, sign.getBlock()))) {
             if (held.getAmount() >= item.getAmount()) {
                 held.setAmount(held.getAmount() - item.getAmount());
-                player.setMetadata("easysigns.lore", new FixedMetadataValue(EasySigns.instance, true));
+                return true;
             } else {
                 player.sendMessage(substitute(qtyMessage, player, sign.getBlock()));
             }
         } else {
             player.sendMessage(substitute(itemMessage, player, sign.getBlock()));
         }
+        return false;
     }
 }

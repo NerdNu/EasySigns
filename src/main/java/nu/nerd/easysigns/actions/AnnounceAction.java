@@ -87,20 +87,22 @@ public class AnnounceAction extends SignAction {
     }
 
     @Override
-    public void action(Player player) {
+    public boolean action(Player player) {
         UUID playerUUID = player.getUniqueId();
         if (!hasUsed(playerUUID)) {
             player.getServer().broadcastMessage(substitute(message, player, sign.getBlock()));
             setUsed(playerUUID, true);
+            return true;
         } else {
             player.sendMessage(ChatColor.GREEN + "[SIGN] " + ChatColor.WHITE + "You can only announce here once!");
+            return false;
         }
     }
 
     /**
      * Return the set of UUIDs (as Strings) of players that have triggered this
      * action.
-     * 
+     *
      * @return the non-null set of UUID Strings.
      */
     private Set<String> getAnnouncedUUIDs() {

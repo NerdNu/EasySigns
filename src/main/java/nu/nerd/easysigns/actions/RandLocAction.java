@@ -15,7 +15,6 @@ import nu.nerd.easysigns.SignData;
 
 public class RandLocAction extends SignAction {
 
-    private final SignData sign;
     private int minDistance;
     private int maxDistance;
     private boolean valid = true;
@@ -37,7 +36,6 @@ public class RandLocAction extends SignAction {
     private static int MAX_RETRIES = 10;
 
     public RandLocAction(SignData sign, String[] args) {
-        this.sign = sign;
         try {
             if (args.length == 1) {
                 minDistance = 0;
@@ -53,7 +51,6 @@ public class RandLocAction extends SignAction {
     }
 
     public RandLocAction(SignData sign, ConfigurationSection attributes) {
-        this.sign = sign;
         // Backwards compatibility. Originally only "distance" was supported.
         if (attributes.contains("distance")) {
             this.minDistance = 0;
@@ -100,13 +97,7 @@ public class RandLocAction extends SignAction {
     }
 
     @Override
-    public boolean shouldExit(Player player) {
-        return shouldExit;
-    }
-
-    @Override
-    public void action(Player player) {
-        shouldExit = false;
+    public boolean action(Player player) {
         for (int i = 0; i < MAX_RETRIES; ++i) {
             double angle = 2 * Math.PI * Math.random();
             double range = minDistance + (maxDistance - minDistance) * Math.random();
@@ -121,13 +112,13 @@ public class RandLocAction extends SignAction {
                 // Centre the player horizontally to avoid suffocation.
                 // Put their feet into the space above the block.
                 player.teleport(loc.add(0.5, 1.0, 0.5));
-                return;
+                return true;
             }
         }
 
         // Give up.
         player.sendMessage(ChatColor.RED + "Sorry! We couldn't find a safe place to put you.");
-        shouldExit = true;
+        return false;
     }
 
 }

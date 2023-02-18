@@ -65,16 +65,15 @@ public class CheckEmptyInvAction extends SignAction {
     }
 
     @Override
-    public boolean shouldExit(Player player) {
-        // don't process further actions if inventory contents > 0
-        return hasNonEmptyInv(player);
-    }
+    public boolean action(Player player) {
+        if (hasNonEmptyInv(player)) {
+            return false;
+        }
 
-    @Override
-    public void action(Player player) {
-        if (message != null && hasNonEmptyInv(player)) {
+        if (message != null) {
             player.sendMessage(ChatColor.RED + substitute(message, player, sign.getBlock()));
         }
+        return true;
     }
 
     private boolean hasNonEmptyInv(Player player) {

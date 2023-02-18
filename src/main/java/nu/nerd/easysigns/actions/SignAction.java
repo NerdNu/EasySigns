@@ -36,20 +36,10 @@ public abstract class SignAction {
      * Was the action successfully constructed with valid arguments? This is
      * used instead of having the constructor throw an exception, because you
      * can't really get at the usage or help text without a class...
-     * 
+     *
      * @return true if the action was successfully constructed
      */
     abstract public boolean isValid();
-
-    /**
-     * If this action may need to prevent further actions from running, this can
-     * be overridden and selectively return true
-     * 
-     * @return false unless subsequent actions should be skipped
-     */
-    public boolean shouldExit(Player player) {
-        return false;
-    }
 
     /**
      * If the action class has any attributes to persist to BlockStore, it
@@ -72,16 +62,18 @@ public abstract class SignAction {
     }
 
     /**
-     * The action performed when the sign is clicked
-     * 
-     * @param player the player clicking the sign
+     * The action performed when the sign is clicked.
+     *
+     * @param player the player clicking the sign.
+     * @return true if subsequent actions should be executed; false to abort
+     *         subsequent sign actions.
      */
-    abstract public void action(Player player);
+    abstract public boolean action(Player player);
 
     /**
      * Translate formatting codes beginning with '&' and replace doubled-up
      * ampersands with a single ampersand.
-     * 
+     *
      * @param message the message string to be translated.
      * @return the translated message.
      */
@@ -92,13 +84,13 @@ public abstract class SignAction {
     /**
      * Translate formatting codes, substitute variables surrounded by % and
      * replace %% with % to yield a formatted string.
-     * 
+     *
      * As a special case for backwards compatibility, the string %s is replaced
      * by the player's name.
-     * 
+     *
      * @param format the format string into which variables are substituted.
      * @param player the player from whom some variables take their values.
-     * @param sign the sign block from which some variables take their values.
+     * @param sign   the sign block from which some variables take their values.
      * @return the translated, formatted string.
      */
     public static String substitute(String format, Player player, Block sign) {
@@ -108,12 +100,12 @@ public abstract class SignAction {
     /**
      * Return a map containing the standard substitution variables documented in
      * the README.md.
-     * 
+     *
      * The map maps variable name to a Supplier<> that returns a String
      * representation of the variable's value.
-     * 
+     *
      * @param player the player from whom some variables take their values.
-     * @param sign the sign block from which some variables take their values.
+     * @param sign   the sign block from which some variables take their values.
      * @return a map of standard variables.
      */
     public static Map<String, Supplier<String>> getStandardVariables(Player player, Block sign) {
@@ -135,15 +127,15 @@ public abstract class SignAction {
     /**
      * Perform variable substitution on a format containing variable references
      * of the form %name%.
-     * 
+     *
      * The sequence %% is replaced with a single %.
-     * 
+     *
      * As a special case for backwards compatibility, %s is treated as
      * equivalent to %p%.
-     * 
-     * @param format the format specifier.
+     *
+     * @param format    the format specifier.
      * @param variables a map from variable name (without %) to an object that
-     *        supplies its String representation.
+     *                  supplies its String representation.
      * @return the format with all defined variable references replaced;
      *         undefined variables are not replaced and %% is converted to %.
      */

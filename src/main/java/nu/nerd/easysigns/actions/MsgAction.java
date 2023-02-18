@@ -10,12 +10,10 @@ import nu.nerd.easysigns.SignData;
 
 public class MsgAction extends SignAction {
 
-    private final SignData sign;
     private String message;
     boolean valid = true;
 
     public MsgAction(SignData sign, String[] args) {
-        this.sign = sign;
         if (args.length > 0) {
             message = translate(String.join(" ", args));
         } else {
@@ -24,7 +22,6 @@ public class MsgAction extends SignAction {
     }
 
     public MsgAction(SignData sign, ConfigurationSection attributes) {
-        this.sign = sign;
         this.message = attributes.getString("message");
     }
 
@@ -61,8 +58,9 @@ public class MsgAction extends SignAction {
     }
 
     @Override
-    public void action(Player player) {
+    public boolean action(Player player) {
         player.sendMessage(message);
+        return true;
     }
 
 }

@@ -115,12 +115,13 @@ actions.
 
 | Action | Arguments | Description |
 | :--- | :--- |:--- |
-| announce | `<message>` | Sets up an announcement sign. The message is broadcast (only once) when a player clicks the sign. The message supports formatting codes and variable substitution. |
+| announce | `<message>` | Sets up an announcement sign. The message is broadcast (only once) when a player clicks the sign. The message supports formatting codes and variable substitution. Subsequent actions are aborted if the sign has already announced for the player. |
 | cart | `[<world>] <x> <y> <z>` | Spawns a minecart at the specified location. |
 | check-empty-inventory | `[<message>]` | If the player's inventory is not empty, do not execute any subsequent sign actions and show `<message>`, if specified. Formatting codes and variable substitution are supported. |
 | ci | | Clears the player's inventory. |
 | clearpotions | | Clears all potion effects. |
 | cmd | `<command>` | Runs a command as the user. Omit the leading slash. Formatting codes and variable substitution are supported. |
+| cooldown | `<seconds>` | Prevents the player from using the sign again until `<seconds>` have elapsed. Subsequent sign actions are blocked until the cooldown has expired. |
 | dropinventory | `[<world>] <x> <y> <z> [<scatter>]` | Drops a copy of your current inventory at the specified coordinates. If `<scatter>` is `true`, give the dropped items random velocities. |
 | give | `<item> <qty> [<slot>]` or `held [<slot>]` | Gives the player an item, specified either as a material and quantity, or as the word 'held' signifying the item currently held by the user configuring the sign. Place it in the specified inventory slot number, or a free slot if not specified. |
 | heal | `[<gap>]` | Refills a player's health. If `<gap>` is provided (it defaults to 0) then the player gets a half a heart every `<gap>` seconds. 0 means fill it up instantly. |
@@ -140,7 +141,7 @@ actions.
 | sound | `<sound> <volume> <pitch> [<ambient>]` | Plays a sound to the player, or to everyone if `<ambient>` is `true`. Sounds types are those specified by the [Bukkit Sound API](https://hub.spigotmc.org/javadocs/spigot/org/bukkit/Sound.html). `<volume>` is the range of the sound in blocks, divided by 15; that is, a volume of 1.0 corresponds to a range of about 15 blocks. `<pitch>` varies from 0.5 (half speed playback) to 2.0 (double speed playback). |
 | take | `<item> <qty> <failmsg>` | Takes `<qty>` of the material `<item>` from a player. If they don't have enough, the `<failmsg>` is shown, and no other commands will be run. Formatting codes and variable substitution are supported. |
 | takeheld | `<qty> [<itemmsg>\|\|<qtymsg>]` | Takes the item in the player's main hand if it matches what is expected. If the wrong item or insufficient items are offered, subsequent sign actions are not executed and either `<itemmsg>` or `<qtymsg>` is shown, as appropriate. The `<itemmsg>` and `<qtymsg>` can be omitted, in which case they default to 'Insufficient items.' and 'That's not the right item!' respectively. If messages are specified, they must be separated by a double bar, `\|\|`. Formatting codes and variable substitution are supported. |
-| tpbed | | Teleports the player back to their bed. |
+| tpbed | | Teleports the player back to their bed. If the player doesn't have a bed spawn, subsequent actions are aborted. |
 | warp | `[<world>] <x> <y> <z> [<yaw>] [<pitch>]` | Teleports the player to the specified X, Y and Z coordinates in the specified world, or the current world if no world is specified. If the yaw and pitch, are specified, they set the player's look angles in degrees at the new location.|
 
 
@@ -167,8 +168,8 @@ actions.
    sign.
    * Alias: `/es-paste`
 
- * `/easy-sign-used <player> <count>` - Record that `<player>` has used a sign
-   `<count>` times.
+ * `/easy-sign-used <player> [<count>]` - Get or set the number of times that
+   `<player>` has used a sign. Omit the `<count>` to get the number.
    * Alias: `/es-used`
 
 

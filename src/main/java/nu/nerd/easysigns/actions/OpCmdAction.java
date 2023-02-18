@@ -7,6 +7,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import nu.nerd.easysigns.EasySigns;
 import nu.nerd.easysigns.SignData;
 
 public class OpCmdAction extends SignAction {
@@ -62,8 +63,14 @@ public class OpCmdAction extends SignAction {
     }
 
     @Override
-    public void action(Player player) {
-        Bukkit.dispatchCommand(Bukkit.getConsoleSender(), substitute(command, player, sign.getBlock()));
+    public boolean action(Player player) {
+        try {
+            return Bukkit.dispatchCommand(Bukkit.getConsoleSender(), substitute(command, player, sign.getBlock()));
+        } catch (Exception ex) {
+            EasySigns.instance.getLogger().severe("EasySigns: " + getName() + ": " +
+                                                  ex.getClass().getName() + ": " + ex.getMessage());
+            return false;
+        }
     }
 
 }

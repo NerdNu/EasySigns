@@ -13,12 +13,10 @@ import nu.nerd.easysigns.SignData;
 
 public class HealAction extends SignAction {
     private final float ONE_TICK_SECONDS = 0.05f;
-    private final SignData sign;
     float gap = 0;
     boolean valid = true;
 
     public HealAction(SignData sign, String[] args) {
-        this.sign = sign;
         if (args.length > 0) {
             try {
                 gap = Float.parseFloat(args[0]);
@@ -32,7 +30,6 @@ public class HealAction extends SignAction {
     }
 
     public HealAction(SignData sign, ConfigurationSection attributes) {
-        this.sign = sign;
         this.gap = (float) attributes.getDouble("gap");
     }
 
@@ -70,7 +67,7 @@ public class HealAction extends SignAction {
     }
 
     @Override
-    public void action(Player player) {
+    public boolean action(Player player) {
         final double maxHealth = player.getAttribute(Attribute.GENERIC_MAX_HEALTH).getBaseValue();
         if (gap < ONE_TICK_SECONDS) {
             player.setHealth(maxHealth);
@@ -86,6 +83,7 @@ public class HealAction extends SignAction {
                 }
             }.runTaskTimer(EasySigns.instance, 20L, Math.round(20L * gap));
         }
+        return true;
     }
 
 }

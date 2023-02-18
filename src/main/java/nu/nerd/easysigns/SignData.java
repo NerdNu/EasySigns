@@ -1,27 +1,25 @@
 package nu.nerd.easysigns;
 
-import net.sothatsit.blockstore.BlockStoreApi;
-import nu.nerd.easysigns.actions.SignAction;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.bukkit.block.Block;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 
-import java.util.ArrayList;
-import java.util.List;
-
+import net.sothatsit.blockstore.BlockStoreApi;
+import nu.nerd.easysigns.actions.SignAction;
 
 /**
  * Representation of an EasySign
  */
 public class SignData {
 
-
     private Block block;
     private Player editingPlayer;
     private List<SignAction> actions;
-
 
     public SignData(Block block) {
         this.block = block;
@@ -29,25 +27,22 @@ public class SignData {
         this.actions = new ArrayList<>();
     }
 
-
     public Block getBlock() {
         return block;
     }
-
 
     public List<SignAction> getActions() {
         return actions;
     }
 
-
     /**
      * Get the Player editing this sign.
+     *
      * @see SignData#setEditingPlayer(Player editingPlayer)
      */
     public Player getEditingPlayer() {
         return editingPlayer;
     }
-
 
     /**
      * Get the Player editing this sign. This is used so SignAction constructors
@@ -57,7 +52,6 @@ public class SignData {
     public void setEditingPlayer(Player editingPlayer) {
         this.editingPlayer = editingPlayer;
     }
-
 
     /**
      * Persist the sign to BlockStore
@@ -74,11 +68,9 @@ public class SignData {
         BlockStoreApi.setBlockMeta(block, EasySigns.instance, EasySigns.key, pack);
     }
 
-
     /**
-     * Load the sign at the specififed block from BlockStore
+     * Load the sign at the specified block from BlockStore
      */
-    @SuppressWarnings("unchecked")
     public static SignData load(Block block) {
         SignData sign = new SignData(block);
         String[] pack = (String[]) BlockStoreApi.getBlockMeta(block, EasySigns.instance, EasySigns.key);
@@ -88,18 +80,16 @@ public class SignData {
                 yaml.loadFromString(s);
                 String name = yaml.getString("action");
                 ConfigurationSection attr = yaml.getConfigurationSection("attributes");
-                Class c = EasySigns.instance.getActionClassByName(name.toLowerCase());
+                Class<?> c = EasySigns.instance.getActionClassByName(name.toLowerCase());
                 SignAction action = (SignAction) c.getConstructor(SignData.class, ConfigurationSection.class)
-                        .newInstance(sign, attr);
+                    .newInstance(sign, attr);
                 sign.actions.add(action);
-            }
-            catch (Exception ex) {
+            } catch (Exception ex) {
                 ex.printStackTrace();
             }
         }
         return sign;
     }
-
 
     /**
      * Remove the sign at the specified block from BlockStore
@@ -109,6 +99,5 @@ public class SignData {
         BlockStoreApi.removeBlockMeta(block, EasySigns.instance, "announce");
         BlockStoreApi.removeBlockMeta(block, EasySigns.instance, "max");
     }
-
 
 }

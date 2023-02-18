@@ -1,57 +1,49 @@
 package nu.nerd.easysigns.actions;
 
-
-import nu.nerd.easysigns.SignData;
 import org.bukkit.ChatColor;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 
+import nu.nerd.easysigns.SignData;
 
 public class SleepAction extends SignAction {
 
-
-    private SignData sign;
-
-
     public SleepAction(SignData sign, String[] args) {
-        this.sign = sign;
     }
-
 
     public SleepAction(SignData sign, ConfigurationSection attributes) {
-        this.sign = sign;
     }
 
-
+    @Override
     public String getName() {
         return "sleep";
     }
 
-
+    @Override
     public String getUsage() {
         return "";
     }
 
-
+    @Override
     public String getHelpText() {
         return "Makes this a sleep sign. Anyone that activates the sign will have their bed respawn point set";
     }
 
-
+    @Override
     public String toString() {
         return getName();
     }
 
-
+    @Override
     public boolean isValid() {
         return true;
     }
 
-
-    public void action(Player player) {
+    @Override
+    public boolean action(Player player) {
         player.setBedSpawnLocation(player.getLocation(), true);
         player.sendMessage(ChatColor.LIGHT_PURPLE + "Your bed has now been set!");
+        return true;
     }
-
 
 }

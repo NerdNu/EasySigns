@@ -8,9 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.metadata.FixedMetadataValue;
 
-import nu.nerd.easysigns.EasySigns;
 import nu.nerd.easysigns.SignData;
 
 public class TakeAction extends SignAction {
@@ -76,22 +74,13 @@ public class TakeAction extends SignAction {
     }
 
     @Override
-    public boolean shouldExit(Player player) {
-        if (player.hasMetadata("easysigns.take")) {
-            // just took the item from the player, don't exit this time
-            player.removeMetadata("easysigns.take", EasySigns.instance);
-            return false;
-        }
-        return !player.getInventory().contains(item.getType(), item.getAmount());
-    }
-
-    @Override
-    public void action(Player player) {
+    public boolean action(Player player) {
         if (player.getInventory().contains(item.getType(), item.getAmount())) {
             player.getInventory().removeItem(item);
-            player.setMetadata("easysigns.take", new FixedMetadataValue(EasySigns.instance, true));
+            return true;
         } else {
             player.sendMessage(substitute(failMessage, player, sign.getBlock()));
+            return false;
         }
     }
 
