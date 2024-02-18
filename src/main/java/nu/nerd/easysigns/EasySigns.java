@@ -54,7 +54,7 @@ public class EasySigns extends JavaPlugin {
     @Override
     public void onEnable() {
         EasySigns.instance = this;
-        SIGN_MATERIALS = Tag.SIGNS.getValues();
+        SIGN_MATERIALS = Tag.ALL_SIGNS.getValues();
         WALL_SIGN_MATERIALS = Tag.WALL_SIGNS.getValues();
 
         createActionAtlas();
