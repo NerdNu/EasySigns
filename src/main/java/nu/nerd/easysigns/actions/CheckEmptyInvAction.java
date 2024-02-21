@@ -67,11 +67,10 @@ public class CheckEmptyInvAction extends SignAction {
     @Override
     public boolean action(Player player) {
         if (hasNonEmptyInv(player)) {
+            if (message != null) {
+                player.sendMessage(ChatColor.RED + substitute(message, player, sign.getBlock()));
+            }
             return false;
-        }
-
-        if (message != null) {
-            player.sendMessage(ChatColor.RED + substitute(message, player, sign.getBlock()));
         }
         return true;
     }
