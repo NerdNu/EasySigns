@@ -50,7 +50,9 @@ public class AnnounceAction extends SignAction {
     public String getHelpText() {
         return "Sets up an announcement sign. The message is broadcast (only once) when a player " +
                "clicks the sign. The message supports colors with the same notation as /signtext, " +
-               "and %s is replaced with the player's name.";
+               "and %s is replaced with the player's name. Include \"--unlimited\" flag before " +
+               "message to allow unlimited announcements (hint: put announce after a \"max\" action" +
+               "to limit max announcements to a custom value).";
     }
 
     @Override
@@ -90,8 +92,10 @@ public class AnnounceAction extends SignAction {
     public boolean action(Player player) {
         UUID playerUUID = player.getUniqueId();
         if (!hasUsed(playerUUID)) {
-            player.getServer().broadcastMessage(substitute(message, player, sign.getBlock()));
-            setUsed(playerUUID, true);
+            player.getServer().broadcastMessage(substitute(message.replaceFirst("^--unlimited ", ""), player, sign.getBlock()));
+            if (!message.startsWith("--unlimited ")) {
+                setUsed(playerUUID, true);
+            }
             return true;
         } else {
             player.sendMessage(ChatColor.GREEN + "[SIGN] " + ChatColor.WHITE + "You can only announce here once!");
