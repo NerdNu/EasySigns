@@ -6,40 +6,13 @@ import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.Set;
 
+import nu.nerd.easysigns.actions.*;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import net.sothatsit.blockstore.BlockStoreApi;
-import nu.nerd.easysigns.actions.AnnounceAction;
-import nu.nerd.easysigns.actions.CartAction;
-import nu.nerd.easysigns.actions.CheckEmptyInvAction;
-import nu.nerd.easysigns.actions.ClearInvAction;
-import nu.nerd.easysigns.actions.ClearPotionsAction;
-import nu.nerd.easysigns.actions.CmdAction;
-import nu.nerd.easysigns.actions.CoolDownAction;
-import nu.nerd.easysigns.actions.DropInventoryAction;
-import nu.nerd.easysigns.actions.GiveAction;
-import nu.nerd.easysigns.actions.HealAction;
-import nu.nerd.easysigns.actions.HungerAction;
-import nu.nerd.easysigns.actions.InventoryAction;
-import nu.nerd.easysigns.actions.LaunchAction;
-import nu.nerd.easysigns.actions.LeatherAction;
-import nu.nerd.easysigns.actions.LoreAction;
-import nu.nerd.easysigns.actions.MaxAction;
-import nu.nerd.easysigns.actions.MsgAction;
-import nu.nerd.easysigns.actions.OpCmdAction;
-import nu.nerd.easysigns.actions.PotionAction;
-import nu.nerd.easysigns.actions.RandLocAction;
-import nu.nerd.easysigns.actions.RedstoneAction;
-import nu.nerd.easysigns.actions.SetBedAction;
-import nu.nerd.easysigns.actions.SleepAction;
-import nu.nerd.easysigns.actions.SoundAction;
-import nu.nerd.easysigns.actions.TakeAction;
-import nu.nerd.easysigns.actions.TakeHeldAction;
-import nu.nerd.easysigns.actions.TeleportBedAction;
-import nu.nerd.easysigns.actions.WarpAction;
 
 public class EasySigns extends JavaPlugin {
 
@@ -86,6 +59,7 @@ public class EasySigns extends JavaPlugin {
         actionAtlas.put("max", MaxAction.class);
         actionAtlas.put("msg", MsgAction.class);
         actionAtlas.put("opcmd", OpCmdAction.class);
+        actionAtlas.put("pay", PayAction.class);
         actionAtlas.put("potion", PotionAction.class);
         actionAtlas.put("randloc", RandLocAction.class);
         actionAtlas.put("redstone", RedstoneAction.class);
